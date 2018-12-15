@@ -12,9 +12,9 @@ const {minify: htmlMinify} = require('html-minifier')
 
 const printError = err => console.error(err.message)
 
-const transformHtml = function (src, dest, {minify}) {
+async function transformHtml(src, dest, {minify}) {
     console.log(`${src} -> ${dest}`)
-    const dom = p(fs.readFile)(src, 'utf8').then(cheerio.load)
+    const dom = await p(fs.readFile)(src, 'utf8').then(cheerio.load)
     dom('script:not([src])').each((i, el) => {
         const input = dom(el).text()
         const [firstLine] = input.match(/^.*\S.*$/m) || [';']
@@ -34,21 +34,21 @@ const transformHtml = function (src, dest, {minify}) {
         collapseInlineTagWhitespace: true, collapseWhitespace: true,
         minifyCSS: true,
     })
-    p(fs.writeFile)(dest, output)
+    await p(fs.writeFile)(dest, output)
 }
 
 
-const transformJs = function (src, dest, {minify}) {
+async function transformJs(src, dest, {minify}) {
     console.log(`${src} -> ${dest}`)
-    const output = p(babel.transformFile)(src, {
+    const output = await p(babel.transformFile)(src, {
         compact: !!minify, comments: !minify, minified: !!minify,
     }).then(out => out.code)
-    p(mkdirp)(path.dirname(dest)).catch(printError)
-    p(fs.writeFile)(dest, output)
+    await p(mkdirp)(path.dirname(dest)).catch(printError)
+    await p(fs.writeFile)(dest, output)
 }
 
 const copy = function (src, dest) {
-     console.log(`${src} -> ${dest}`)
+    console.log(`${src} -> ${dest}`)
     p(mkdirp)(path.dirname(dest)).catch(printError)
     new Promise((resolve, reject) =>
         fs.createReadStream(src)
@@ -58,8 +58,8 @@ const copy = function (src, dest) {
     )
 }
 
-const transform = function (src, dest, minify) {
-    let srcFs = fs.readdirSync(src);
+async function transform(src, dest, minify) {
+    let srcFs = await fs.readdirSync(src);
     const opt = {minify: minify}
     for (let file of srcFs) {
         if (file.match(/\.html?$/)) transformHtml(src, dest, opt).catch(printError)
