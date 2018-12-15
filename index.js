@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 module.exports = {
-    transformHtml
+    transform
 }
 const co = require('co')
 const p = require('pify')
