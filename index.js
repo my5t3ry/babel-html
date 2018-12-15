@@ -65,7 +65,7 @@ async function transform(src, dest, minify) {
         if (file.match(/\.html?$/)) await transformHtml(src, dest, opt).catch(printError)
         else if (file.match(/\.jsx?$/)) await transformJs(src, dest, opt).catch(printError)
         await copy(src, dest, opt).catch(printError);
-    }
+    }                                               
 
 }
 
