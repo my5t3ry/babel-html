@@ -47,9 +47,9 @@ async function transformJs(src, dest, {minify}) {
     await p(fs.writeFile)(dest, output)
 }
 
-const copy = function (src, dest) {
+async function copy(src, dest) {
     console.log(`${src} -> ${dest}`)
-    p(mkdirp)(path.dirname(dest)).catch(printError)
+    await p(mkdirp)(path.dirname(dest)).catch(printError)
     new Promise((resolve, reject) =>
         fs.createReadStream(src)
             .pipe(fs.createWriteStream(dest))
@@ -64,7 +64,7 @@ async function transform(src, dest, minify) {
     for (let file of srcFs) {
         if (file.match(/\.html?$/)) transformHtml(src, dest, opt).catch(printError)
         else if (file.match(/\.jsx?$/)) transformJs(src, dest, opt).catch(printError)
-        copy(src, dest, opt).catch(printError)
+        copy(src, dest, opt);
     }
 
 }
