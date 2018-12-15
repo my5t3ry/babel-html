@@ -1,7 +1,5 @@
 #!/usr/bin/env node
-module.exports = {
-    transform
-}
+
 const co = require('co')
 const p = require('pify')
 const path = require('path')
@@ -39,6 +37,7 @@ const transformHtml = function (src, dest, {minify}) {
      p(fs.writeFile)(dest, output)
 }
 
+
 const transformJs = function (src, dest, {minify}) {
     if (!o.q) console.log(`${src} -> ${dest}`)
     const output =  p(babel.transformFile)(src, {
@@ -69,4 +68,8 @@ const transform = function (src, dest, minify) {
         else if (o.D) copy(src, dest, opt).catch(printError)
     }
 
+}
+
+module.exports = {
+    transform
 }
