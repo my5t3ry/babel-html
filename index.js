@@ -62,10 +62,10 @@ async function transform(src, dest, minify) {
     let srcFs = await fs.readdirSync(src);
     const opt = {minify: minify}
     for (let file of srcFs) {
-        const [srcFile, destFule] = [path.join(src, file), path.join(dest, file)]
+        const [srcFile, destFule] = [src+ file, dest+ file]
         if (file.match(/\.html?$/)) await transformHtml(srcFile, destFule, opt).catch(printError)
         else if (file.match(/\.jsx?$/)) await transformJs(srcFile, destFule, opt).catch(printError)
-        await copy(srcFile, destFule, opt).catch(printError);
+        // await copy(srcFile, destFule, opt).catch(printError);
     }
 }
 
