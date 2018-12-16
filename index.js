@@ -13,7 +13,6 @@ const {minify: htmlMinify} = require('html-minifier')
 const printError = err => console.error(err.message)
 
 async function transformHtml(src, dest, {minify}) {
-    console.log(`${src} -> ${dest}`)
     const dom = await p(fs.readFile)(src, 'utf8').then(cheerio.load)
     dom('script:not([src])').each((i, el) => {
         const input = dom(el).text()
@@ -39,7 +38,6 @@ async function transformHtml(src, dest, {minify}) {
 
 
 async function transformJs(src, dest, {minify}) {
-    console.log(`${src} -> ${dest}`)
     const output = await p(babel.transformFile)(src, {
         compact: !!minify, comments: !minify, minified: !!minify,
     }).then(out => out.code)
@@ -48,7 +46,6 @@ async function transformJs(src, dest, {minify}) {
 }
 
 async function copy(src, dest) {
-    console.log(`${src} -> ${dest}`)
     await p(mkdirp)(path.dirname(dest)).catch(printError)
     new Promise((resolve, reject) =>
         fs.createReadStream(src)
